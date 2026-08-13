@@ -1,0 +1,20 @@
+{
+    "name": "ecommerce-promotions-livewire",
+    "version": "0.1.0",
+    "description": "The shopper-facing surface of Promotions: a code entry field and a display of what the applied offers took off, re-quoted on every basket change and never cached.",
+    "category": "presentation",
+    "provider": "Liberu\\Ecommerce\\Promotions\\Livewire\\PromotionsLivewireServiceProvider",
+    "requires": {
+        "packages": {
+            "liberusoftware/ecommerce-promotions": "^0.1.0"
+        }
+    },
+    "features": [
+        "A shopper-facing promotion code field whose only writable property is the code string",
+        "An applied-offer display rendered from the domain's own Money and per-line allocation",
+        "Every refusal answered with one message, so the field is not an oracle for which codes exist",
+        "The entitlement re-quoted on every render and on every basket-changed event, never held as state",
+        "No money value accepted as client input: the basket is an opaque reference the server prices",
+        "An optional basket-resolution seam whose absence removes the display rather than failing the page"
+    ]
+}

@@ -12,24 +12,57 @@
 
 ## Features
 
-- Fully compatible with **Laravel 13**, **PHP 8.5**, and **Pest 5**.
-- Built following the domain-driven design guidelines of the Liberu architecture.
-- Reusable, presenting a clean public contract and boundaries.
-- Adheres to the strict database, security, and authorization standards of Liberu.
+- One shopper-facing component: a promotion code field and a display of what the
+  applied offers took off. Nothing merchant-facing — that is `-filament`.
+- **Exactly one writable property**, the code string. Every public property is
+  `#[Locked]` or `#[Validate]`, never both, never neither, enforced by a
+  reflection test over every registered component.
+- **No money value is ever a client input.** The component holds an opaque basket
+  reference and the server prices it.
+- **No computed discount is held as state.** An entitlement is perishable: it is
+  re-quoted on every render and on every basket change, and never cached.
+- **One refusal message for every refusal.** Unknown code, expired offer,
+  exhausted offer, a limit already reached, a minimum not met, an unbound
+  eligibility seam — all render byte-identically, because a distinguishable
+  refusal is an oracle for which codes exist.
+- Money rendered from the domain's `Money`, and per-line figures taken from the
+  allocation it publishes. Nothing re-derived from a float.
 
 ## Requirements
 
 - **PHP 8.5**
-- **Composer 2**
-- A supported database (e.g. MySQL, PostgreSQL, SQLite)
+- **Laravel 13**, **Livewire 4.2+**
+- `liberusoftware/ecommerce-promotions` — the domain package that owns every rule
 
 ## Quick start
 
-To install this package via Composer, run:
+The domain package is not on Packagist, so add both VCS repositories to the
+host's `composer.json` first (`docs/adoption.md` has the entries), then:
 
 ```bash
-composer require liberusoftware/module-ecommerce-promotions-livewire
+composer require liberusoftware/ecommerce-promotions-livewire
 ```
+
+Enable both modules, bind the basket seam, and place the component:
+
+```blade
+<livewire:ecommerce-promotions::basket-promotions
+    :tenant-id="$tenant->id"
+    :basket-ref="$cart->reference"
+/>
+```
+
+Full steps, including the one interface you have to implement, are in
+[docs/adoption.md](docs/adoption.md).
+
+## Package documentation
+
+- [docs/domain.md](docs/domain.md) — what the component is, what it holds, and the
+  three rules it exists to keep
+- [docs/adoption.md](docs/adoption.md) — installing, enabling, binding the basket
+  seam, and overriding the view
+- [docs/runbook.md](docs/runbook.md) — the four ways this renders nothing, and
+  which of them is somebody else's fault
 
 ## Documentation
 
